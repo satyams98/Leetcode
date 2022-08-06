@@ -1,0 +1,53 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    
+    vector<TreeNode*> rec(int start, int end){
+        
+        if(start>end)
+            return {NULL};
+       
+        vector<TreeNode*> res;
+        
+        for(int i=start;i<=end;i++){
+            
+            vector<TreeNode*>lchilds, rchilds;
+            
+            lchilds= rec(start, i-1);
+            rchilds = rec(i+1, end);
+            
+            
+            for(auto l: lchilds){
+                for(auto r: rchilds){
+                    
+                    TreeNode* root = new TreeNode(i);
+                    root->left = l;
+                    root->right = r;
+                    res.push_back(root);
+                    
+                }
+            }
+        }
+        return res;        
+    }
+      
+    vector<TreeNode*> generateTrees(int n) {
+        
+       return rec(1, n);
+    }
+};
+
+//iterating through each node 1->n, taking each node as root, and making recursive call for left/right childs
+//both childs will return vector of all possible subtrees, from those vectors trying all possible combination of trees, by keeping i'th node as root.
+//eg:) if lChild returns 3 subtrees, rChild returns 4 subtrees, then total possible combinations is 3*4 = 12,
+//similarly checking for all i nodes from 1 to N
