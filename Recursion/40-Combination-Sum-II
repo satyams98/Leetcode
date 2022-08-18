@@ -1,0 +1,32 @@
+class Solution {
+private:
+    void rec(vector<int>& candidates, int target, vector<int> ds, vector<vector<int>>& res, int index){
+      
+        if(target==0){
+                res.push_back(ds);
+            return;
+            }
+        
+        for(int i=index;i<candidates.size();i++){
+            
+            if(i>index && candidates[i-1]==candidates[i]) continue;//to handle duplicates|| i>index allows to take duplicates only once and move to next iteration
+            if(candidates[i]>target) break;
+            
+         ds.push_back(candidates[i]);
+         rec(candidates, target-candidates[i], ds, res, i+1 ); //start rec from every unique element
+         ds.pop_back();
+        }
+        
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+         vector<vector<int>> res;
+        
+        sort(candidates.begin(), candidates.end());
+        
+        rec(candidates, target, {}, res, 0);
+        return res;
+    }
+};
+
+//https://takeuforward.org/data-structure/combination-sum-ii-find-all-unique-combinations/
