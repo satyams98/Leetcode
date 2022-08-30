@@ -1,51 +1,59 @@
-void merge(vector<int> &arr, int i, int mid, int j, int& count){
+void merge(long long *arr, long long int start,  long long int end, long long int& count){
    
-    if(i>=j)
+    if(start>=end)
         return;
-    int len1 = mid-i+1;
-    int len2= j-mid;
-    int *arr1 = new int[len1];
-    int *arr2  = new int[len2];
-    int mainArrayIndex = i;
     
-    for(int k=0;k<len1;k++)
-        arr1[k]= arr[mainArrayIndex++];
+    long long int mid= (start+end)/2;
     
-    for(int k=0;k<len2;k++)
-        arr2[k] = arr[mainArrayIndex++];
     
-    mainArrayIndex = i;
-   
-    for(int index1=0;index1<len1;index1++){
-        for(int index2=0;index2<len2;index2++){
-            if(arr1[index1]>arr2[index2])
-                count++;
+    long long int *temp = new long long int[end-start+1];
+    int beforeMid = start, afterMid = mid+1;
+    int tempIndex=0;
+    
+    while(beforeMid<=mid && afterMid<=end){
+        
+        if(arr[beforeMid]<=arr[afterMid]) 
+            temp[tempIndex++] = arr[beforeMid++];
+            
+        else{
+            temp[tempIndex++] = arr[afterMid++];
+            count+= mid-beforeMid+1;
         }
-    }  
+    }
+    
+    while(beforeMid<=mid)
+        temp[tempIndex++] = arr[beforeMid++];
+    
+    while(afterMid<=end)
+        temp[tempIndex++] = arr[afterMid++];
+    
+    tempIndex=0;
+    for(int i= start;i<=end;i++)
+        arr[i] = temp[tempIndex++];
    
-    delete [] arr1;
-    delete [] arr2;
+    delete [] temp;
+
     
 }
 
-void mergeSort(vector<int> &arr, int i, int j, int& count){
+void mergeSort(long long *arr, long long int start, long long int end, long long int& count){
       
-    if(i>=j)
+    if(start>=end)
         return;
     
-    int mid= (i+j)/2;
+    int mid= (start+end)/2;
     
-    mergeSort(arr, i, mid, count);
-    mergeSort(arr, mid+1, j, count);
+    mergeSort(arr, start, mid, count);
+    mergeSort(arr, mid+1, end, count);
   
-    merge(arr, i, mid, j, count);
+    merge(arr, start, end, count);
     
 }
+    long long int inversionCount(long long arr[], long long N)
+    {
+        long long int count=0;
+        mergeSort(arr, 0, N-1, count);
+        return count;
+    }
 
-int main() {
-        vector<int> arr={8,4,2,1, -1};
-        int count=0;
-        mergeSort(arr, 0, arr.size()-1, count);
-        cout<<count;
-             
-}
+};
